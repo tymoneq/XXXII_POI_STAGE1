@@ -22,7 +22,6 @@ int main()
     for (int i = 0; i < n; i++)
     {
         cin >> Robot[i].s >> Robot[i].z;
-
         Robot[i].i = i;
     }
 
