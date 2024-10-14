@@ -8,7 +8,7 @@ int main()
     cin >> ziarno;
     srand(ziarno);
 
-    int n = (rand() % 10000) + 1;
+    int n = (rand() % 5) + 1;
     vector<int> A;
     int b = (rand() % 8) + 1;
     A.push_back(b);

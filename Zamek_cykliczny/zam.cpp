@@ -4,6 +4,7 @@ using namespace std;
 
 typedef long long ll;
 
+// #warning change N
 constexpr int N = 1e6 + 10;
 ll Cost_from_begining[N];
 ll Cost_change_to_9_from_end[N];
@@ -53,7 +54,7 @@ int main()
         }
 
         Cost_change_to_9_from_end[number.size() - 1] = 9 - (number[number.size() - 1] - '0');
-        int j = 10;
+        ll j = 10;
         for (int i = number.size() - 2; i >= 0; i--)
         {
             Cost_change_to_9_from_end[i] = Cost_change_to_9_from_end[i + 1];
@@ -64,21 +65,17 @@ int main()
         }
         bool moved = 0;
 
-        int cnt = 0;
-
+        ll changed = 0;
         for (int i = number.size() - 1; i > 0; i--)
         {
             if (number[i] == '9')
                 continue;
-            if (number[i] == '0')
-            {
-                number[i] = '9';
-                cnt++;
-                continue;
-            }
 
-            if (!moved && Cost_change_to_9_from_end[i] >= 0 && Cost_change_to_9_from_end[i] < (Cost_from_begining[i] + 9 - (number[i] - '0')))
-                res += Cost_change_to_9_from_end[i], cnt = 0;
+            if (!moved && Cost_change_to_9_from_end[i] >= 0 && Cost_change_to_9_from_end[i] - changed <= (Cost_from_begining[i] + (number[i] == '0' ? 0 : 9 - (number[i] - '0'))))
+            {
+                res += Cost_change_to_9_from_end[i] - changed;
+                changed = Cost_change_to_9_from_end[i];
+            }
             else
             {
                 if (!moved)
@@ -101,7 +98,7 @@ int main()
         if (!moved)
         {
             for (int i = 0; i < number.size(); i++)
-                if (number[i] != '9' || cnt != 0)
+                if (number[i] != '9')
                 {
                     onlyNine = 0;
                     break;
