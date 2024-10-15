@@ -22,18 +22,11 @@ int main()
     int n;
     cin >> n;
 
-    if (n == 0)
-    {
-        cout << "TAK\n";
-        return 0;
-    }
-
     vector<robot> Robot(n);
 
     for (int i = 0; i < n; i++)
-    {
         cin >> Robot[i].s >> Robot[i].z;
-    }
+    
 
     sort(Robot.begin(), Robot.end(), sortoFirst);
     if (Robot[0].s == Robot[0].z)

@@ -4,8 +4,8 @@ using namespace std;
 constexpr int N = 1010;
 struct robot
 {
-    int s, z;
-    vector<int> Pokona, Pokonany;
+    int s, z, Pokonany;
+    vector<int> Pokona;
 };
 
 int D[N][N];
@@ -50,7 +50,7 @@ int main()
             if (Robot[i].s > Robot[j].s || Robot[i].z > Robot[j].z)
                 Robot[i].Pokona.push_back(j);
             if (Robot[i].s < Robot[j].s || Robot[i].z < Robot[j].z)
-                Robot[i].Pokonany.push_back(j);
+                Robot[i].Pokonany++;
         }
 
     if (n % 2 == 1)
@@ -90,7 +90,7 @@ int main()
     for (int i = 0; i < n; i++)
         for (int j = i + 1; j < n; j++)
             for (int k = j + 1; k < n; k++)
-                if (D[i][j] == 1 && D[i][k] == 1 && D[j][i] == 1 && D[j][k] == 1 && D[k][i] == 1 && D[k][j] == 1 && Robot[i].Pokonany.size() == 2 && Robot[j].Pokonany.size() == 2 && Robot[k].Pokonany.size() == 2)
+                if (D[i][j] == 1 && D[i][k] == 1 && D[j][i] == 1 && D[j][k] == 1 && D[k][i] == 1 && D[k][j] == 1 && Robot[i].Pokonany== 2 && Robot[j].Pokonany == 2 && Robot[k].Pokonany == 2)
                 {
                     T = 0;
                     break;
