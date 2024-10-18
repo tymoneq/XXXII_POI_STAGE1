@@ -4,8 +4,8 @@ using namespace std;
 
 typedef long long ll;
 
-#warning change MAXN = 3010
-constexpr int MAXN = 10;
+// #warning change MAXN = 3010
+constexpr int MAXN = 3010;
 
 vector<int> Bitada[MAXN], Bajtocja[MAXN];
 ll dp[MAXN][3];
@@ -101,7 +101,7 @@ inline void dfs(int v, int p)
     Sajz[v] = 1;
     Parent[v] = p;
     for (int w : Bajtocja[v])
-        if (w != isOff[w] && w != p)
+        if (!isOff[w] && w != p)
         {
             dfs(w, v);
             Sajz[v] += Sajz[w];
@@ -142,9 +142,11 @@ inline void centroid_decomposition(int v, int tree_sajz)
                 calc(Bajtocja[centr][i], Bitada[n][j], j, centr, n);
 
         combinationsCalclation(n, centr);
+        if (N == 1)
+            res += 1;
     }
 
-    isOff[v] = 1;
+    isOff[centr] = 1;
     for (int w : Bajtocja[centr])
         if (!isOff[w])
         {
