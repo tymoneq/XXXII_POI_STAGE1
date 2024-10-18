@@ -10,7 +10,7 @@ constexpr int MAXN = 3010;
 vector<int> Bitada[MAXN], Bajtocja[MAXN];
 ll dp[MAXN][3];
 bool isOff[MAXN];
-int Sajz[MAXN], Parent[MAXN];
+int Sajz[MAXN], Parent[MAXN], sajz[MAXN], SajzBitada[MAXN][MAXN];
 int k, N, M;
 ll res = 0;
 
@@ -48,10 +48,11 @@ inline void combinationsCalclation(int &vBitada, int &vBajtocja)
 }
 
 inline void
-calc(int vBajtocja, int vBitada, int state, int parentBajtocja, int parentBitada)
+calc(int vBajtocja, int vBitada, int state, int parentBajtocja, int parentBitada, int BitadaStart)
 {
     dp[vBajtocja][state] = 0;
     // liczenie kombinacji na liściach
+
     if (Bitada[vBitada].size() == 1)
     {
         dp[vBajtocja][state] += 1;
@@ -63,7 +64,7 @@ calc(int vBajtocja, int vBitada, int state, int parentBajtocja, int parentBitada
         if (w != parentBajtocja && !isOff[w])
             PossibleVertexes.push_back(w);
 
-    if (PossibleVertexes.size() + 1 < Bitada[vBitada].size())
+    if (PossibleVertexes.size() + 1 < Bitada[vBitada].size() || SajzBitada[BitadaStart][vBitada] > sajz[vBajtocja])
         return;
 
     // dfs
@@ -74,7 +75,7 @@ calc(int vBajtocja, int vBitada, int state, int parentBajtocja, int parentBitada
         for (int j = 0; j < Bitada[vBitada].size(); j++)
             if (Bitada[vBitada][j] != parentBitada)
             {
-                calc(w, Bitada[vBitada][j], STATE, vBajtocja, vBitada);
+                calc(w, Bitada[vBitada][j], STATE, vBajtocja, vBitada, BitadaStart);
                 STATE++;
             }
     }
@@ -107,6 +108,27 @@ inline void dfs(int v, int p)
             Sajz[v] += Sajz[w];
         }
 }
+
+inline void dfs2(int v, int p)
+{
+    sajz[v] = 1;
+    for (int w : Bajtocja[v])
+        if (!isOff[w] && w != p)
+        {
+            dfs2(w, v);
+            sajz[v] += sajz[w];
+        }
+}
+inline void dfs3(int v, int p, int i)
+{
+    SajzBitada[i][v] = 1;
+    for (int w : Bitada[v])
+        if (w != p)
+        {
+            dfs3(w, v, i);
+            SajzBitada[i][v] += SajzBitada[i][w];
+        }
+}
 inline int find_Centroid(int v, int tree_sajz)
 {
     for (int w : Bajtocja[v])
@@ -133,13 +155,19 @@ inline void centroid_decomposition(int v, int tree_sajz)
     dfs(v, 0);
     int centr = find_Centroid(v, tree_sajz);
 
+    dfs2(centr, 0);
     for (int n = 1; n <= N; n++)
     {
+        if (sajz[centr] < N)
+        {
+            isOff[centr] = 1;
+            return;
+        }
         if (Bajtocja[centr].size() < Bitada[n].size())
             continue;
         for (int i = 0; i < Bajtocja[centr].size(); i++)
             for (int j = 0; j < Bitada[n].size(); j++)
-                calc(Bajtocja[centr][i], Bitada[n][j], j, centr, n);
+                calc(Bajtocja[centr][i], Bitada[n][j], j, centr, n, n);
 
         combinationsCalclation(n, centr);
         if (N == 1)
@@ -177,6 +205,9 @@ int main()
         Bajtocja[a].push_back(b);
         Bajtocja[b].push_back(a);
     }
+
+    for (int i = 1; i <= N; i++)
+        dfs3(i, 0, i);
 
     centroid_decomposition(1, M);
 
