@@ -1,15 +1,12 @@
-g++ -std=c++17 zam.cpp -o wzor.e
-g++ gen.cpp -o g.e
-g++ -std=c++17 zamek_brut.cpp -o brut.e
+g++ -O3 -static zam.cpp -std=c++20 -o wzor.e
 
-for((i=1 ; i>0;i++))
+for((i=0 ; i<100001;i++))
 do
 echo $i > ziarno
-    ./g.e < ziarno > test.in
-    ./wzor.e < test.in > wzor.out
-    ./brut.e < test.in > brut.out
+    ./wzor.e < test$i.in > wzor.out
+
     
-    if diff -b brut.out wzor.out > /dev/null
+    if diff -b test$i.out wzor.out > /dev/null
     then
         echo -ne "\e[1;32m$i\e[0m\r"
     else
