@@ -10,23 +10,20 @@ int main()
     cin >> ziarno;
     srand(ziarno);
 
-    int n = rand() % 10;
+    int n = rand() % 20;
     n++;
     cout << n << "\n";
 
-    vector<int> A;
-
-    for (int i = 0; i < n; i++)
-    {
-        int a = rand() % B;
-        ++a;
-        A.push_back(a);
-    }
     for (int j = 0; j < 2; j++)
     {
         for (int i = 0; i < n; i++)
-            cout << A[i] << " ";
+        {
+            int a = rand() % B;
+            ++a;
+            cout << a << " ";
+        }
 
         cout << "\n";
     }
+    return 0;
 }

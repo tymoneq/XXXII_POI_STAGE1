@@ -76,8 +76,7 @@ int main()
             break;
     }
     int indx = -1, INDX = -1, mxIndex = -1;
-    bool zeroInfront = 0;
-    for (int i = 0; i < s.size() - 1; i++)
+    for (int i = 0; i < s.size(); i++)
     {
         if (CostFromEnd[i] == 0)
         {
@@ -85,15 +84,13 @@ int main()
             INDX--;
             break;
         }
+        if (s[i] != '0' && (s[i] != '9'))
+            mxIndex = max(mxIndex, i);
         if (CostFromEnd[i] <= (CostFromFront[i] - (mxIndex != -1 ? CostFromFront[mxIndex] : 0)) && CostFromEnd[i] > 0)
         {
             indx = i;
             break;
         }
-        if (s[i] != '0' && (s[i] != '9' || zeroInfront))
-            mxIndex = max(mxIndex, i);
-        if (s[i] == '0')
-            zeroInfront = 1;
     }
 
     if (INDX != -1 && mxIndex != -1)
@@ -101,8 +98,23 @@ int main()
 
     else if (indx == -1 && mxIndex != -1)
     {
+        int cnt = 0;
+        bool zeros = 0;
+        for (int i = mxIndex + 1; i < s.size(); i++)
+        {
+            if (s[i] == '0' && cnt > 0)
+                zeros = 1;
+            if (s[i] == '9')
+                cnt++;
+        }
+
         int x = s.size() - 2;
-        res = CostFromFront[min(x, mxIndex)];
+        while (s[x] == '9' && !zeros)
+        {
+            x--;
+        }
+
+        res = min(CostFromFront[x], CostFromFront[mxIndex] + (zeros ? cnt : 0));
         if (s[s.size() - 1] == '0')
             res -= 9;
     }
