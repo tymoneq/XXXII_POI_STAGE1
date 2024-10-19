@@ -76,6 +76,7 @@ int main()
             break;
     }
     int indx = -1, INDX = -1, mxIndex = -1;
+    bool zeroInfront = 0;
     for (int i = 0; i < s.size() - 1; i++)
     {
         if (CostFromEnd[i] == 0)
@@ -89,8 +90,10 @@ int main()
             indx = i;
             break;
         }
-        if (s[i] != '0' && s[i] != '9')
+        if (s[i] != '0' && (s[i] != '9' || zeroInfront))
             mxIndex = max(mxIndex, i);
+        if (s[i] == '0')
+            zeroInfront = 1;
     }
 
     if (INDX != -1 && mxIndex != -1)
