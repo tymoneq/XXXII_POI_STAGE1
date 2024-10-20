@@ -5,7 +5,7 @@ using namespace std;
 typedef long long ll;
 
 constexpr int N = 1e6 + 10;
-ll CostFromFront[N], CostFromEnd[N];
+ll CostFromFront[N];
 
 int main()
 {
@@ -15,149 +15,81 @@ int main()
 
     string s;
 
-    // ifstream file("zam3.in");
-    // file >> s;
-
     cin >> s;
 
-    ll res = 0;
-    // edge cases
-    if (s[0] == '1')
+    if (s.size() == 1 && s[0] == '1')
     {
-        if (s.size() == 1)
-        {
-            cout << "0\n";
-            return 0;
-        }
-        bool edgeCase = 1;
-        for (int i = 1; i < s.size(); i++)
-            if (s[i] != '0')
-            {
-                edgeCase = 0;
-                break;
-            }
-
-        if (edgeCase)
-        {
-
-            cout << "1\n";
-            return 0;
-        }
-    }
-    else if (s.size() == 1)
-    {
-        res = 10 - (s[0] - '0');
-        res += 1;
-
-        cout << res << "\n";
+        cout << "0\n";
         return 0;
     }
+    ll res = 0;
 
-    CostFromFront[0] = 9 - (s[s.size() - 1] - '0') + 1 + (9 - (s[0] - '0'));
+    CostFromFront[0] = 9 - (s[0] - '0') + 1;
 
     for (int i = 1; i < s.size(); i++)
     {
         CostFromFront[i] = CostFromFront[i - 1];
-        if (i == s.size() - 1)
-            break;
         if (s[i] != '0')
-            CostFromFront[i] += 9 - (s[i] - '0') + 1;
+            CostFromFront[i] += 1 + 9 - (s[i] - '0');
     }
-
-    for (int i = 0; i < s.size(); i++)
-        CostFromEnd[i] = -1;
-
-    ll j = 1;
-    for (int i = s.size() - 1; i >= 0; i--)
-    {
-        CostFromEnd[i] = CostFromEnd[i + 1] + ((ll)(9 - (s[i] - '0')) * j);
-        j *= 10;
-        if (j > 1e8)
-            break;
-    }
-    int indx = -1, INDX = -1, mxIndex = -1;
-    for (int i = 0; i < s.size(); i++)
-    {
-        if (CostFromEnd[i] == 0)
+    ll j = 1, cost = 0;
+    int mxIndx = -1;
+    if (s.size() > 10)
+        for (int i = s.size() - 1; i >= 0; i--)
         {
-            INDX = i;
-            INDX--;
-            break;
-        }
-        if (s[i] != '0' && (s[i] != '9'))
-            mxIndex = max(mxIndex, i);
-        if (CostFromEnd[i] <= (CostFromFront[i] - (mxIndex != -1 ? CostFromFront[mxIndex] : 0)) && CostFromEnd[i] > 0)
-        {
-            indx = i;
-            break;
-        }
-    }
 
-    if (INDX != -1 && mxIndex != -1)
-        res = CostFromFront[mxIndex];
-
-    else if (indx == -1 && mxIndex != -1)
-    {
-        int cnt = 0;
-        bool zeros = 0;
-        for (int i = mxIndex + 1; i < s.size(); i++)
-        {
-            if (s[i] == '0' && cnt > 0)
-                zeros = 1;
-            if (s[i] == '9')
-                cnt++;
-        }
-
-        int x = s.size() - 2;
-        while (s[x] == '9' && !zeros)
-        {
-            x--;
-        }
-
-        res = min(CostFromFront[x], CostFromFront[mxIndex] + (zeros ? cnt : 0));
-        if (s[s.size() - 1] == '0')
-            res -= 9;
-    }
-    else if (indx == -1 && INDX == -1 && mxIndex == -1)
-    {
-
-        bool onlyNines = 1;
-        for (int i = 0; i < s.size(); i++)
-            if (s[i] != '9')
+            if (cost + (9 - (s[i] - '0')) * j < CostFromFront[i])
             {
-                onlyNines = 0;
+                mxIndx = i;
+                cost += (9 - (s[i] - '0')) * j;
+                j *= 10;
+            }
+            else
+                break;
+
+            if (j > 10e9)
+                break;
+        }
+
+    res = cost;
+    bool moved = 0;
+    if (mxIndx == -1)
+    {
+        bool XD = ((s.size() > 1 && s[0] == '1') ? 1 : 0);
+        for (int i = 1; i < s.size(); i++)
+            if (s[i] != '0')
+            {
+                XD = 0;
                 break;
             }
 
-        if (onlyNines)
+        if (!XD)
         {
-            cout << "2\n";
-            return 0;
+            mxIndx = s.size() - 1;
+            res += (s[s.size() - 1] == '0' ? 0 : 9 - (s[s.size() - 1] - '0'));
         }
-        vector<int> ZeroCount(s.size());
-        for (int i = 0; i < s.size(); i++)
-        {
-            if (s[i] == '0')
-                ZeroCount[i]++;
-            if (i > 0)
-                ZeroCount[i] += ZeroCount[i - 1];
-        }
-
-        for (int i = 0; i < s.size(); i++)
-            if (s[i] == '9')
-                mxIndex = i;
-
-        res = mxIndex - ZeroCount[mxIndex] + 1;
+        if (s[s.size() - 1] == '0')
+            moved = 1;
     }
-    else
+    for (int i = mxIndx - 1; i >= 0; i--)
     {
-        if (mxIndex != -1)
-            res = CostFromEnd[indx] + CostFromFront[mxIndex] - (9 - (s[s.size() - 1] - '0'));
-        else
-            res = CostFromEnd[indx];
-    }
+        if (s[i] == '0')
+        {
+            moved = 1;
+            continue;
+        }
+        if (!moved && s[i] == '9')
+            continue;
 
-    res += 2;
+        res += 1 + 9 - (s[i] - '0');
+        moved = 1;
+    }
+    if (mxIndx != -1)
+        res += 2;
+    else
+        res = 1;
+
     cout << res << "\n";
+
     return 0;
 }

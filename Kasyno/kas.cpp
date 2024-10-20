@@ -5,30 +5,10 @@ using namespace std;
 
 typedef long long ll;
 
-inline bool bin_search(vector<ll> &used, ll X)
+inline bool prime(ll n)
 {
-
-    int lo = 0, hi = used.size() - 1, mid;
-
-    while (lo <= hi)
-    {
-        mid = lo + (hi - lo) / 2;
-        if (used[mid] == X)
-            return 1;
-
-        if (used[mid] < X)
-            lo = mid + 1;
-        else
-            hi = mid - 1;
-    }
-
-    return 0;
-}
-
-inline bool prime(ll n, vector<ll> &used)
-{
-    for (ll i = 2; i * i <= n; i++)
-        if (n % i == 0 && bin_search(used, i))
+    for (ll i = 3; i * i <= n; i++)
+        if (n % i == 0)
             return 0;
 
     return 1;
@@ -41,30 +21,25 @@ int main()
     {
 
         ll N = DajN();
-        vector<ll> checked;
-        ll curent_x = 1;
+        ll Y = (1 << 29); // Wysoka potęga 2 576460752303423488
+        ll curent_x = Pytaj(Y);
+        if (curent_x <= (1 << 8))
+        {
+            Szturchnij();
+            continue;
+        }
 
-        for (ll i = 2; i <= (N / curent_x); i++)
-            if (prime(i, checked))
+        for (ll i = 3; (i <= (N / curent_x)); i += 2)
+        {
+            if (prime(i))
             {
-                ll tmp = Pytaj(i);
-                checked.push_back(i);
-                if (tmp == i)
-                {
-                    curent_x *= i;
-                    ll next_X = i;
-                    while (next_X <= (N / i))
-                    {
-                        next_X *= i;
-                        tmp = Pytaj(next_X);
-                        if (next_X != tmp)
-                            break;
+                ll tmp = i;
+                while (tmp < (N / i))
+                    tmp *= i;
 
-                        curent_x *= i;
-                    }
-                }
+                curent_x *= Pytaj(tmp);
             }
-
+        }
         Odpowiedz(curent_x);
     }
 }
