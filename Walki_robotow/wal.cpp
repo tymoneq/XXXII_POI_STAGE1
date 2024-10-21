@@ -1,11 +1,15 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+constexpr int N = 1010;
+bool Pokonany[N];
 
 struct wal
 {
-    int szybkosc, zwinnosc, ile_pokona = 0;
+    int szybkosc, zwinnosc;
 };
+
+inline bool sorto(wal &lhs, wal &rhs) { return (lhs.szybkosc + lhs.zwinnosc) < (rhs.szybkosc + rhs.zwinnosc); }
 
 int main()
 {
@@ -19,24 +23,34 @@ int main()
     for (int i = 0; i < n; i++)
         cin >> Roboty[i].szybkosc >> Roboty[i].zwinnosc;
 
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-        {
-            if (i == j)
-                continue;
+    sort(Roboty.begin(), Roboty.end(), sorto);
 
-            if (Roboty[i].szybkosc > Roboty[j].szybkosc || Roboty[i].zwinnosc > Roboty[j].zwinnosc)
-                ++Roboty[i].ile_pokona;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        if (Pokonany[i])
+            continue;
+        for (int j = i - 1; j > 0; j--)
+        {
+            if (Pokonany[j])
+                continue;
+            if ((Roboty[j].szybkosc < Roboty[i].szybkosc) && (Roboty[j].zwinnosc < Roboty[i].zwinnosc))
+                Pokonany[j] = 1;
+            else if ((Roboty[j].szybkosc < Roboty[i].szybkosc && Roboty[j].zwinnosc > Roboty[i].zwinnosc) || (Roboty[j].szybkosc > Roboty[i].szybkosc && Roboty[j].zwinnosc < Roboty[i].zwinnosc))
+            {
+                Pokonany[j] = 1;
+                Pokonany[i] = 1;
+                break;
+            }
+        }
+    }
+    bool T = 1;
+    for (int i = 0; i < n; i++)
+        if (!Pokonany[i])
+        {
+            T = 0;
+            break;
         }
 
-    int cnt = 0;
-    for (int i = 0; i < n; i++)
-        if (Roboty[i].ile_pokona == n - 1)
-            cnt++;
-
-    if (cnt % 2 == 0)
-        cout << "TAK\n";
-    else
-        cout << "NIE\n";
+    cout << (T ? "TAK" : "NIE") << "\n";
     return 0;
 }
