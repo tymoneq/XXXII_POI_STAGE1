@@ -7,7 +7,7 @@ typedef long long ll;
 
 inline bool prime(ll n)
 {
-    for (ll i = 3; i * i <= n; i++)
+    for (ll i = 2; i * i <= n; i++)
         if (n % i == 0)
             return 0;
 
@@ -21,25 +21,32 @@ int main()
     {
 
         ll N = DajN();
-        ll Y = (1 << 29); // Wysoka potęga 2 576460752303423488
-        ll curent_x = Pytaj(Y);
-        if (curent_x <= (1 << 8))
-        {
-            Szturchnij();
-            continue;
-        }
+        ll curent_x = 1;
+        ll tmp = 1;
 
-        for (ll i = 3; (i <= (N / curent_x)); i += 2)
-        {
+        for (ll i = 2; (i <= (N / curent_x)); i++)
             if (prime(i))
             {
-                ll tmp = i;
-                while (tmp < (N / i))
-                    tmp *= i;
+                if (tmp < (N / i))
+                {
+                    ll XD = Pytaj(tmp);
+                    ll XD2 = i;
+                    while (XD2 < N / i)
+                        XD2 *= i;
 
-                curent_x *= Pytaj(tmp);
+                    curent_x *= Pytaj(XD2);
+                    tmp = 1;
+                    if (XD == 1)
+                        continue;
+                    ll x = XD;
+                    while (x < N / XD)
+                        x *= XD;
+                    curent_x *= Pytaj(x);
+                }
+                else
+                    tmp *= i;
             }
-        }
+
         Odpowiedz(curent_x);
     }
 }

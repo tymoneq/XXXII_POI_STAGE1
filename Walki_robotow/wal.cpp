@@ -25,11 +25,11 @@ int main()
 
     sort(Roboty.begin(), Roboty.end(), sorto);
 
-    for (int i = n - 1; i >= 0; i--)
+    for (int i = 0; i < n; i++)
     {
         if (Pokonany[i])
             continue;
-        for (int j = i - 1; j > 0; j--)
+        for (int j = 0; j < i; j++)
         {
             if (Pokonany[j])
                 continue;
