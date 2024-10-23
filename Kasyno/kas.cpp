@@ -16,7 +16,15 @@ inline bool prime(ll n)
 
 int main()
 {
-
+    vector<ll> Mersenne = {2,
+                           3,
+                           7,
+                           31,
+                           128,
+                           8191,
+                           131071,
+                           524287,
+                           2147483647};
     while (1)
     {
 
