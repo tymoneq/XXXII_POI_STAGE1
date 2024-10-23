@@ -19,100 +19,65 @@ int main()
     cout.tie(0);
     int n;
     cin >> n;
-    if (n > 1000)
+
+    vector<bitek> Bohaterowie(n);
+    for (int i = 0; i < n; i++)
     {
-        vector<pair<int, int>> A(n);
-        for (int i = 0; i < 2; i++)
-            for (int j = 0; j < n; j++)
-            {
-                cin >> A[j].first;
-                A[j].second = j;
-            }
+        cin >> Bohaterowie[i].Bajtyna;
+        Bohaterowie[i].indx = i;
+    }
+    for (int i = 0; i < n; i++)
+        cin >> Bohaterowie[i].Bitek;
 
-        sort(A.begin(), A.end(), greater<pair<int, int>>());
+    sort(Bohaterowie.begin(), Bohaterowie.end(), sorto);
 
-        ll Bitek = 0, Bajtyna = 0;
-        int mn_Bitek = numeric_limits<int>::max(), mn_Bajtyna = numeric_limits<int>::max();
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j <= n; j++)
+            ANS[j] = 0;
 
-        for (int i = 0; i < n; i++)
+        vector<bitek> A;
+
+        for (int j = 0; j < n; j++)
         {
-            if (Bitek <= Bajtyna)
+            if (i == j)
+                continue;
+            A.push_back(Bohaterowie[j]);
+        }
+
+        sort(A.begin(), A.end(), sorto);
+
+        ll Bajtyna_Bajtyna = Bohaterowie[i].Bajtyna;
+        ll Bajtyna_Bitek = Bohaterowie[i].Bitek;
+        ll mnBajtyna = Bohaterowie[i].Bitek;
+
+        ll Bitek_Bajtyna = 0;
+        ll Bitek_Bitek = 0;
+        ll mnBitek = numeric_limits<ll>::max();
+
+        for (bitek b : A)
+        {
+            if (Bajtyna_Bajtyna <= Bitek_Bajtyna)
             {
-                Bitek += A[i].first;
-                mn_Bitek = min(A[i].first, mn_Bitek);
-                ANS[A[i].second] = 1;
+                mnBajtyna = min(mnBajtyna, b.Bitek);
+                Bajtyna_Bajtyna += b.Bajtyna;
+                Bajtyna_Bitek += b.Bitek;
             }
             else
             {
-                Bajtyna += A[i].first;
-                mn_Bajtyna = min(A[i].first, mn_Bajtyna);
+                mnBitek = min(mnBitek, b.Bajtyna);
+                ANS[b.indx] = 1;
+                Bitek_Bajtyna += b.Bajtyna;
+                Bitek_Bitek += b.Bitek;
             }
         }
 
-        if (Bitek >= Bajtyna - mn_Bajtyna && Bajtyna >= Bitek - mn_Bitek)
-            for (int i = 0; i < n; i++)
-                cout << ANS[i] << " ";
-    }
-    else
-    {
-
-        vector<bitek> Bohaterowie(n);
-        for (int i = 0; i < n; i++)
+        if (Bajtyna_Bajtyna >= (Bitek_Bajtyna - mnBitek) && Bitek_Bitek >= (Bajtyna_Bitek - mnBajtyna))
         {
-            cin >> Bohaterowie[i].Bajtyna;
-            Bohaterowie[i].indx = i;
-        }
-        for (int i = 0; i < n; i++)
-            cin >> Bohaterowie[i].Bitek;
-
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j <= n; j++)
-                ANS[j] = 0;
-
-            vector<bitek> A;
-
             for (int j = 0; j < n; j++)
-            {
-                if (i == j)
-                    continue;
-                A.push_back(Bohaterowie[j]);
-            }
-
-            sort(A.begin(), A.end(), sorto);
-
-            ll Bajtyna_Bajtyna = Bohaterowie[i].Bajtyna;
-            ll Bajtyna_Bitek = Bohaterowie[i].Bitek;
-            ll mnBajtyna = Bohaterowie[i].Bitek;
-
-            ll Bitek_Bajtyna = 0;
-            ll Bitek_Bitek = 0;
-            ll mnBitek = numeric_limits<ll>::max();
-
-            for (bitek b : A)
-            {
-                if (Bajtyna_Bajtyna <= Bitek_Bajtyna)
-                {
-                    mnBajtyna = min(mnBajtyna, b.Bitek);
-                    Bajtyna_Bajtyna += b.Bajtyna;
-                    Bajtyna_Bitek += b.Bitek;
-                }
-                else
-                {
-                    mnBitek = min(mnBitek, b.Bajtyna);
-                    ANS[b.indx] = 1;
-                    Bitek_Bajtyna += b.Bajtyna;
-                    Bitek_Bitek += b.Bitek;
-                }
-            }
-
-            if (Bajtyna_Bajtyna >= (Bitek_Bajtyna - mnBitek) && Bitek_Bitek >= (Bajtyna_Bitek - mnBajtyna))
-            {
-                for (int j = 0; j < n; j++)
-                    cout << ANS[j] << " ";
-                cout << "\n";
-                break;
-            }
+                cout << ANS[j] << " ";
+            cout << "\n";
+            break;
         }
     }
 

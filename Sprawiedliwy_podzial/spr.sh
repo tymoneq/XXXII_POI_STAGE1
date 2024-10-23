@@ -10,10 +10,10 @@ do
     echo $i > ziarno
 
     ./gen.e < ziarno > test.in
-    ./wzor.e < test.in > wzor.out
-    ./brut.e < test.in > brut.out
+    time  ./wzor.e < test.in > wzor.out
+    # ./brut.e < test.in > brut.out
 
-    python3 spraw.py
+    # python3 spraw.py
 
     # if diff -b wzor.out brut.out > /dev/null
     # then

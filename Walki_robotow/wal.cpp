@@ -1,15 +1,11 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-constexpr int N = 1010;
-bool Pokonany[N];
 
 struct wal
 {
     int szybkosc, zwinnosc;
 };
-
-inline bool sorto(wal &lhs, wal &rhs) { return (lhs.szybkosc + lhs.zwinnosc) < (rhs.szybkosc + rhs.zwinnosc); }
 
 int main()
 {
@@ -20,37 +16,42 @@ int main()
     int n;
     cin >> n;
     vector<wal> Roboty(n);
+    set<int> A;
     for (int i = 0; i < n; i++)
         cin >> Roboty[i].szybkosc >> Roboty[i].zwinnosc;
 
-    sort(Roboty.begin(), Roboty.end(), sorto);
-
     for (int i = 0; i < n; i++)
     {
-        if (Pokonany[i])
-            continue;
-        for (int j = 0; j < i; j++)
+        int tmp = 0;
+        for (int j = 0; j < n; j++)
         {
-            if (Pokonany[j])
+            if (i == j)
                 continue;
-            if ((Roboty[j].szybkosc < Roboty[i].szybkosc) && (Roboty[j].zwinnosc < Roboty[i].zwinnosc))
-                Pokonany[j] = 1;
-            else if ((Roboty[j].szybkosc < Roboty[i].szybkosc && Roboty[j].zwinnosc > Roboty[i].zwinnosc) || (Roboty[j].szybkosc > Roboty[i].szybkosc && Roboty[j].zwinnosc < Roboty[i].zwinnosc))
-            {
-                Pokonany[j] = 1;
-                Pokonany[i] = 1;
-                break;
-            }
-        }
-    }
-    bool T = 1;
-    for (int i = 0; i < n; i++)
-        if (!Pokonany[i])
-        {
-            T = 0;
-            break;
-        }
 
-    cout << (T ? "TAK" : "NIE") << "\n";
+            if (Roboty[i].zwinnosc > Roboty[j].zwinnosc || Roboty[i].szybkosc > Roboty[j].szybkosc)
+                ++tmp;
+        }
+        if (tmp == n - 1)
+            A.insert(i);
+    }
+    if (A.size() % 2 == 1)
+        for (int i = 0; i < n; i++)
+        {
+            if (A.find(i) != A.end())
+                continue;
+
+            for (int w : A)
+                if (Roboty[i].szybkosc > Roboty[w].szybkosc || Roboty[i].zwinnosc > Roboty[w].zwinnosc)
+                {
+                    A.erase(w);
+                    break;
+                }
+            if (A.size() % 2 ==0)
+                break;
+        }
+    if (A.size() % 2 == 1)
+        cout << "NIE\n";
+    else
+        cout << "TAK\n";
     return 0;
 }

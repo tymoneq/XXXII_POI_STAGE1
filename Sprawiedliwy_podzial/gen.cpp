@@ -10,7 +10,7 @@ int main()
     cin >> ziarno;
     srand(ziarno);
 
-    int n = rand() % 20;
+    int n = rand() % 500'000;
     n++;
     cout << n << "\n";
 
