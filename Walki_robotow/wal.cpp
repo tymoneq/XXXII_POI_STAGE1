@@ -46,7 +46,7 @@ int main()
                     A.erase(w);
                     break;
                 }
-            if (A.size() % 2 ==0)
+            if (A.size() % 2 == 0)
                 break;
         }
     if (A.size() % 2 == 1)
