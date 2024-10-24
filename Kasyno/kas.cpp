@@ -16,44 +16,46 @@ inline bool prime(ll n)
 
 int main()
 {
-    vector<ll> Mersenne = {2,
-                           3,
-                           7,
-                           31,
-                           128,
-                           8191,
-                           131071,
-                           524287,
-                           2147483647};
+    ll N = DajN();
+    set<ll> Primes;
+
+    ll prime501 = 0;
+    ll i = 2;
+    while (i > 0)
+    {
+        if (Primes.size() == 3000 && prime(i))
+        {
+            prime501 = i;
+            break;
+        }
+
+        if (prime(i))
+            Primes.insert(i);
+        ++i;
+    }
+
+    vector<ll> TruePrimes;
+
+    for (auto it = Primes.begin(); it != Primes.end(); it++)
+    {
+        ll b = *it;
+        while (b < (N / *it))
+            b *= *it;
+        TruePrimes.push_back(b);
+    }
+
     while (1)
     {
-
-        ll N = DajN();
         ll curent_x = 1;
-        ll tmp = 1;
 
-        for (ll i = 2; (i <= (N / curent_x)); i++)
-            if (prime(i))
-            {
-                if (tmp < (N / i))
-                {
-                    ll XD = Pytaj(tmp);
-                    ll XD2 = i;
-                    while (XD2 < N / i)
-                        XD2 *= i;
+        for (ll y : TruePrimes)
+            curent_x *= Pytaj(y);
 
-                    curent_x *= Pytaj(XD2);
-                    tmp = 1;
-                    if (XD == 1)
-                        continue;
-                    ll x = XD;
-                    while (x < N / XD)
-                        x *= XD;
-                    curent_x *= Pytaj(x);
-                }
-                else
-                    tmp *= i;
-            }
+        if (curent_x <= (N / prime501))
+        {
+            Szturchnij();
+            continue;
+        }
 
         Odpowiedz(curent_x);
     }
