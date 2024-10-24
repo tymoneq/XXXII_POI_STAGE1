@@ -4,73 +4,139 @@ using namespace std;
 
 typedef long long ll;
 constexpr int N = 5e5 + 10;
+
 bool ANS[N];
-struct bitek
+
+struct podzial
 {
-    ll Bajtyna, Bitek, indx = 0;
+    ll Bajtyna, Bitek;
+    int indx;
 };
 
-inline bool sorto(bitek &lhs, bitek &rhs) { return lhs.Bajtyna >= rhs.Bajtyna; }
+struct Bitekcomp
+{
+    bool operator()(const podzial &lhs, const podzial &rhs) const
+    {
+        if (lhs.Bitek == rhs.Bitek)
+            return lhs.Bajtyna < rhs.Bajtyna;
+        return lhs.Bitek > rhs.Bitek;
+    }
+};
+
+struct Bajtynacomp
+{
+    bool operator()(const podzial &lhs, const podzial &rhs) const
+    {
+        if (lhs.Bajtyna == rhs.Bajtyna)
+            return lhs.Bitek < rhs.Bitek;
+        return lhs.Bajtyna > rhs.Bajtyna;
+    }
+};
 
 int main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
+
     int n;
+
     cin >> n;
+    vector<podzial> A(n);
 
-    vector<bitek> Bohaterowie(n);
     for (int i = 0; i < n; i++)
-    {
-        cin >> Bohaterowie[i].Bajtyna;
-        Bohaterowie[i].indx = i;
-    }
-    for (int i = 0; i < n; i++)
-        cin >> Bohaterowie[i].Bitek;
-
-    sort(Bohaterowie.begin(), Bohaterowie.end(), sorto);
+        cin >> A[i].Bajtyna;
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
-            ANS[j] = 0;
+        cin >> A[i].Bitek;
+        A[i].indx = i;
+    }
 
-        ll Bajtyna_Bajtyna = Bohaterowie[i].Bajtyna;
-        ll Bajtyna_Bitek = Bohaterowie[i].Bitek;
-        ll mnBajtyna = Bohaterowie[i].Bitek;
+    multiset<podzial, Bajtynacomp> Bajtyna;
+    multiset<podzial, Bitekcomp> Bitek;
+    ll Bajtyna_Bajtyna = 0, Bajtyna_Bitek = 0, mnBajtyna = numeric_limits<ll>::max(), Bitek_Bitek = 0, Bitek_Bajtyna = 0, mnBitek = numeric_limits<ll>::max();
 
-        ll Bitek_Bajtyna = 0;
-        ll Bitek_Bitek = 0;
-        ll mnBitek = numeric_limits<ll>::max();
-        for (int j = 0; j < n; j++)
+    for (int i = 0; i < n; i++)
+    {
+        Bajtyna.insert(A[i]);
+        Bitek.insert(A[i]);
+    }
+
+    for (int k = 0; k < n; k++)
+    {
+        if (Bajtyna_Bitek + Bajtyna.begin()->Bitek - min(mnBajtyna, Bajtyna.begin()->Bitek) <= Bitek_Bitek)
         {
-            if (i == j)
-                continue;
+            Bajtyna_Bajtyna += Bajtyna.begin()->Bajtyna;
+            Bajtyna_Bitek += Bajtyna.begin()->Bitek;
+            mnBajtyna = min(mnBajtyna, Bajtyna.begin()->Bitek);
 
-            if (Bajtyna_Bajtyna <= Bitek_Bajtyna)
-            {
-                mnBajtyna = min(mnBajtyna, Bohaterowie[j].Bitek);
-                Bajtyna_Bajtyna += Bohaterowie[j].Bajtyna;
-                Bajtyna_Bitek += Bohaterowie[j].Bitek;
-            }
-            else
-            {
-                mnBitek = min(mnBitek, Bohaterowie[j].Bajtyna);
-                ANS[Bohaterowie[j].indx] = 1;
-                Bitek_Bajtyna += Bohaterowie[j].Bajtyna;
-                Bitek_Bitek += Bohaterowie[j].Bitek;
-            }
+            podzial a = *Bajtyna.begin();
+            auto it = Bitek.find(a);
+            Bitek.erase(it);
+            Bajtyna.erase(Bajtyna.begin());
         }
-
-        if (Bajtyna_Bajtyna >= (Bitek_Bajtyna - mnBitek) && Bitek_Bitek >= (Bajtyna_Bitek - mnBajtyna))
+        else
         {
-            for (int j = 0; j < n; j++)
-                cout << ANS[j] << " ";
-            cout << "\n";
-            break;
+            Bitek_Bitek += Bitek.begin()->Bitek;
+            Bitek_Bajtyna += Bitek.begin()->Bajtyna;
+            ANS[Bitek.begin()->indx] = 1;
+            mnBitek = min(mnBitek, Bitek.begin()->Bajtyna);
+
+            podzial a = *Bitek.begin();
+            auto it = Bajtyna.find(a);
+            Bajtyna.erase(it);
+            Bitek.erase(Bitek.begin());
         }
     }
+
+    if ((Bajtyna_Bitek - mnBajtyna) <= Bitek_Bitek && (Bitek_Bajtyna - mnBitek <= Bajtyna_Bajtyna))
+    {
+        for (int i = 0; i < n; i++)
+            cout << ANS[i] << " ";
+        cout << "\n";
+
+        return 0;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        Bajtyna.insert(A[i]);
+        Bitek.insert(A[i]);
+        ANS[i] = 0;
+    }
+    Bajtyna_Bajtyna = 0, Bajtyna_Bitek = 0, mnBajtyna = numeric_limits<ll>::max(), Bitek_Bitek = 0, Bitek_Bajtyna = 0, mnBitek = numeric_limits<ll>::max();
+
+    for (int k = 0; k < n; k++)
+    {
+        if (Bitek_Bajtyna + Bitek.begin()->Bajtyna - min(mnBitek, Bitek.begin()->Bajtyna) <= Bajtyna_Bajtyna)
+        {
+            Bitek_Bitek += Bitek.begin()->Bitek;
+            Bitek_Bajtyna += Bitek.begin()->Bajtyna;
+            ANS[Bitek.begin()->indx] = 1;
+            mnBitek = min(mnBitek, Bitek.begin()->Bajtyna);
+
+            podzial a = *Bitek.begin();
+            auto it = Bajtyna.find(a);
+            Bajtyna.erase(it);
+            Bitek.erase(Bitek.begin());
+        }
+
+        else
+        {
+            Bajtyna_Bajtyna += Bajtyna.begin()->Bajtyna;
+            Bajtyna_Bitek += Bajtyna.begin()->Bitek;
+            mnBajtyna = min(mnBajtyna, Bajtyna.begin()->Bitek);
+
+            podzial a = *Bajtyna.begin();
+            auto it = Bitek.find(a);
+            Bitek.erase(it);
+            Bajtyna.erase(Bajtyna.begin());
+        }
+    }
+    for (int i = 0; i < n; i++)
+        cout << ANS[i] << " ";
+    cout << "\n";
 
     return 0;
 }
