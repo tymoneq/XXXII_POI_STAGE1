@@ -33,19 +33,8 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j <= n; j++)
-            ANS[j] = 0;
-
-        vector<bitek> A;
-
         for (int j = 0; j < n; j++)
-        {
-            if (i == j)
-                continue;
-            A.push_back(Bohaterowie[j]);
-        }
-
-        sort(A.begin(), A.end(), sorto);
+            ANS[j] = 0;
 
         ll Bajtyna_Bajtyna = Bohaterowie[i].Bajtyna;
         ll Bajtyna_Bitek = Bohaterowie[i].Bitek;
@@ -54,21 +43,23 @@ int main()
         ll Bitek_Bajtyna = 0;
         ll Bitek_Bitek = 0;
         ll mnBitek = numeric_limits<ll>::max();
-
-        for (bitek b : A)
+        for (int j = 0; j < n; j++)
         {
+            if (i == j)
+                continue;
+
             if (Bajtyna_Bajtyna <= Bitek_Bajtyna)
             {
-                mnBajtyna = min(mnBajtyna, b.Bitek);
-                Bajtyna_Bajtyna += b.Bajtyna;
-                Bajtyna_Bitek += b.Bitek;
+                mnBajtyna = min(mnBajtyna, Bohaterowie[j].Bitek);
+                Bajtyna_Bajtyna += Bohaterowie[j].Bajtyna;
+                Bajtyna_Bitek += Bohaterowie[j].Bitek;
             }
             else
             {
-                mnBitek = min(mnBitek, b.Bajtyna);
-                ANS[b.indx] = 1;
-                Bitek_Bajtyna += b.Bajtyna;
-                Bitek_Bitek += b.Bitek;
+                mnBitek = min(mnBitek, Bohaterowie[j].Bajtyna);
+                ANS[Bohaterowie[j].indx] = 1;
+                Bitek_Bajtyna += Bohaterowie[j].Bajtyna;
+                Bitek_Bitek += Bohaterowie[j].Bitek;
             }
         }
 
