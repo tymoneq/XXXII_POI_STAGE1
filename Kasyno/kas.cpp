@@ -17,8 +17,7 @@ inline bool prime(ll n)
 int main()
 {
     ll N = DajN();
-    set<ll> Primes;
-
+    vector<ll> Primes;
     ll prime501 = 0;
     ll i = 2;
     while (i > 0)
@@ -30,7 +29,7 @@ int main()
         }
 
         if (prime(i))
-            Primes.insert(i);
+            Primes.push_back(i);
         ++i;
     }
 
@@ -48,8 +47,14 @@ int main()
     {
         ll curent_x = 1;
 
+        int j = 0;
         for (ll y : TruePrimes)
+        {
             curent_x *= Pytaj(y);
+            if (j < Primes.size() - 1 && curent_x > (N / Primes[j + 1]))
+                break;
+            j++;
+        }
 
         if (curent_x <= (N / prime501))
         {
