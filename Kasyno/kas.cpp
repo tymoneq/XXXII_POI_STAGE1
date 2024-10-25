@@ -53,6 +53,10 @@ int main()
             curent_x *= Pytaj(y);
             if (j < Primes.size() - 1 && curent_x > (N / Primes[j + 1]))
                 break;
+            if (j == 0 && curent_x < 1024)
+                break;
+            if (j == 1000 && curent_x < (ll)1e11)
+                break;
             j++;
         }
 
