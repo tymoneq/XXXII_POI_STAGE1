@@ -69,10 +69,12 @@ int main()
     {
         ll curent_x = 1;
         auto it = TruePrimes.begin();
+
         for (int j = 0; j < Combinations.size(); j++)
         {
             tmp = Pytaj(Combinations[j]);
             curent_x *= tmp;
+
             while (tmp > 1)
             {
                 if (tmp % (it->first) == 0)
