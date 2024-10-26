@@ -17,9 +17,14 @@ inline bool prime(ll n)
 int main()
 {
     ll N = DajN();
+
     vector<ll> Primes;
+    map<ll, ll> TruePrimes;
+    vector<ll> Combinations;
+    ll tmp = 1;
     ll prime501 = 0;
     ll i = 2;
+
     while (i > 0)
     {
         if (Primes.size() == 3000 && prime(i))
@@ -33,31 +38,55 @@ int main()
         ++i;
     }
 
-    vector<ll> TruePrimes;
-
-    for (auto it = Primes.begin(); it != Primes.end(); it++)
+    for (ll it : Primes)
     {
-        ll b = *it;
-        while (b < (N / *it))
-            b *= *it;
-        TruePrimes.push_back(b);
+        ll b = it;
+        while (b < (N / it))
+            b *= it;
+        TruePrimes[it] = b;
+    }
+
+    i = 0;
+    while (i < Primes.size())
+    {
+        if (tmp > (N / Primes[i]))
+        {
+            Combinations.push_back(tmp);
+            tmp = 1;
+        }
+        else
+        {
+            tmp *= Primes[i];
+            ++i;
+        }
     }
 
     while (1)
     {
         ll curent_x = 1;
-
-        int j = 0;
-        for (ll y : TruePrimes)
+        auto it = TruePrimes.begin();
+        for (int j = 0; j < Combinations.size(); j++)
         {
-            curent_x *= Pytaj(y);
-            if (j < Primes.size() - 1 && curent_x > (N / Primes[j + 1]))
-                break;
+            tmp = Pytaj(Combinations[j]);
+            curent_x *= tmp;
+            while (tmp > 1)
+            {
+                if (tmp % (it->first) == 0)
+                {
+                    ll XD = Pytaj(it->second);
+                    curent_x *= XD / it->first;
+                    tmp /= it->first;
+                }
+                it++;
+            }
             if (j == 0 && curent_x < 1024)
                 break;
-            if (j == 1000 && curent_x < (ll)1e11)
+
+            auto itr = it;
+            itr++;
+
+            if (itr != TruePrimes.end() && tmp > (N / (itr->first)))
                 break;
-            j++;
         }
 
         if (curent_x <= (N / prime501))
