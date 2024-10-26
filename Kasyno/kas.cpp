@@ -26,6 +26,7 @@ int main()
     ll i = 2;
     const int SAJZ = 7'000;
 
+    // liczenie liczb pierwszych
     while (i > 0)
     {
         if (Primes.size() == SAJZ && prime(i))
@@ -39,6 +40,7 @@ int main()
         ++i;
     }
 
+    // Mnożenie liczb pierwszychh do największej możliwej liczby w zakresie
     for (ll it : Primes)
     {
         ll b = it;
@@ -47,6 +49,7 @@ int main()
         TruePrimes[it] = b;
     }
 
+    // Tworzenie kombinacji kolejnych iloczynów liczb pierwszych
     i = 0;
     while (i < Primes.size())
     {
@@ -80,16 +83,24 @@ int main()
                 }
                 it++;
             }
-            if (j == 0 && curent_x < 100'000)
+
+            // Magiczne ify
+            if (j == 0 && curent_x < 10'000)
+                break;
+
+            if (j == 10 && curent_x < 1'000'000)
+                break;
+
+            if (j == 50 && curent_x < 1'000'000'000)
+                break;
+
+            if (j == 125 && curent_x < 1'000'000'000'000)
                 break;
 
             auto itr = it;
             itr++;
 
             if (itr != TruePrimes.end() && tmp > (N / (itr->first)))
-                break;
-
-            if (j == 125 && curent_x < 1'000'000'000'000)
                 break;
         }
 
