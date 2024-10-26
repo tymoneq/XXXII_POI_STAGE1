@@ -79,13 +79,16 @@ int main()
                 }
                 it++;
             }
-            if (j == 0 && curent_x < 1024)
+            if (j == 0 && curent_x < 100'000)
                 break;
 
             auto itr = it;
             itr++;
 
             if (itr != TruePrimes.end() && tmp > (N / (itr->first)))
+                break;
+
+            if (j == 125 && curent_x < 1'000'000'000'000)
                 break;
         }
 
