@@ -11,7 +11,7 @@ namespace
     int bajtalary = 10'000'000;
 
     // Aby zmienić losowość należy zamienić 1 na dowolną inną liczbę typu int.
-    mt19937_64 rng(4);
+    mt19937_64 rng(10);
 
     long long X;
     bool czy_zainicjalizowany = false;

@@ -85,7 +85,7 @@ int main()
             }
 
             // Magiczne ify
-            if (j == 0 && curent_x < 10'000)
+            if (j == 0 && curent_x < 1'000)
                 break;
 
             if (j == 10 && curent_x < 1'000'000)
