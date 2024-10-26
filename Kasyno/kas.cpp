@@ -24,10 +24,11 @@ int main()
     ll tmp = 1;
     ll prime501 = 0;
     ll i = 2;
+    const int SAJZ = 7'000;
 
     while (i > 0)
     {
-        if (Primes.size() == 3000 && prime(i))
+        if (Primes.size() == SAJZ && prime(i))
         {
             prime501 = i;
             break;
