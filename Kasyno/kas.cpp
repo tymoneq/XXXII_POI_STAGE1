@@ -24,7 +24,7 @@ int main()
     ll tmp = 1;
     ll prime501 = 0;
     ll i = 2;
-    const int SAJZ = 7'000;
+    const int SAJZ = 6'000;
 
     // liczenie liczb pierwszych
     while (i > 0)
@@ -93,10 +93,10 @@ int main()
             if (j == 10 && curent_x < 1'000'000)
                 break;
 
-            if (j == 50 && curent_x < 1'000'000'000)
+            if (j == 50 && curent_x < 8'000'000'00)
                 break;
 
-            if (j == 125 && curent_x < 1'000'000'000'000)
+            if (j == 350 && curent_x < 3'000'000'000'000)
                 break;
 
             auto itr = it;
