@@ -24,7 +24,7 @@ int main()
     ll tmp = 1;
     ll prime501 = 0;
     ll i = 2;
-    const int SAJZ = 6'000;
+    const int SAJZ = 5'000;
 
     // liczenie liczb pierwszych
     while (i > 0)
